@@ -24,12 +24,13 @@ function useQuery() {
     const dispatch = useDispatch();
   
     const [search, setSearch] = useState('');
+    const [tags, setTags] = useState([]);
     const history = useHistory();
   
     const searchPost = () => {
-      if (search.trim() ) {
-        dispatch(getPostsBySearch({ search }));
-        history.push(`/posts/search?searchQuery=${search || 'none'}`);
+      if (search.trim() || tags) {
+        dispatch(getPostsBySearch({ search, tags: tags.join(',') }));
+        history.push(`/posts/search?searchQuery=${search || 'none'}&tags=${tags.join(',')}`);
       } else {
         history.push('/');
       }
@@ -41,6 +42,7 @@ function useQuery() {
       }
     };
   
+
     return (
       <Grow in>
         <Container maxWidth="xl">
@@ -56,6 +58,7 @@ function useQuery() {
             <Grid item xs={12} sm={6} md={3}>
               <AppBar className={classes.appBarSearch} position="static" color="inherit">
                 <TextField onKeyDown={handleKeyPress} name="search" variant="outlined" label="Search Photos" fullWidth value={search} onChange={(e) => setSearch(e.target.value)} />
+ 
                 <Button onClick={searchPost} className={classes.searchButton} variant="contained" color="primary">Search</Button>
               </AppBar>
               <Form currentId={currentId} setCurrentId={setCurrentId} />
